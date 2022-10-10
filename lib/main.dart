@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:principios/data/work_inherited.dart';
 import 'package:principios/screens/principal_screen.dart';
-
-import 'screens/form_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +16,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const FormScreen(),
+      home: WorkInherited(
+        child: const PrincipalScreen(),
+      ),
     );
   }
 }

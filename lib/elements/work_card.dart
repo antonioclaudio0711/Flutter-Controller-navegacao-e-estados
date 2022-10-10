@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:principios/elements/difficulty.dart';
 
 class WorkCard extends StatefulWidget {
-  const WorkCard({
+  WorkCard({
     super.key,
     required this.text,
     required this.image,
@@ -13,14 +13,21 @@ class WorkCard extends StatefulWidget {
   final String image;
   final int difficulty;
 
+  int nivel = 0;
+  double value = 0;
+  int count = 0;
+
   @override
   State<WorkCard> createState() => _WorkCardState();
 }
 
 class _WorkCardState extends State<WorkCard> {
-  int nivel = 0;
-  double value = 0;
-  int count = 0;
+  bool assetOrNetwork() {
+    if (widget.image.contains('http')) {
+      return false;
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,40 +35,36 @@ class _WorkCardState extends State<WorkCard> {
       padding: const EdgeInsets.all(8.0),
       child: Stack(
         children: [
-          if (count == 0)
+          if (widget.count == 0)
             Container(
               height: 140,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 color: Colors.blue,
-                //(count == 0) ? Colors.blue : Colors.red,
               ),
             ),
-          if (count == 1)
+          if (widget.count == 1)
             Container(
               height: 140,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 color: Colors.red,
-                //(count == 0) ? Colors.blue : Colors.red,
               ),
             ),
-          if (count == 2)
+          if (widget.count == 2)
             Container(
               height: 140,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 color: Colors.purple,
-                //(count == 0) ? Colors.blue : Colors.red,
               ),
             ),
-          if (count >= 3)
+          if (widget.count >= 3)
             Container(
               height: 140,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 color: Colors.black,
-                //(count == 0) ? Colors.blue : Colors.red,
               ),
             ),
           Column(
@@ -84,10 +87,15 @@ class _WorkCardState extends State<WorkCard> {
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(4),
-                        child: Image.asset(
-                          widget.image,
-                          fit: BoxFit.cover,
-                        ),
+                        child: assetOrNetwork()
+                            ? Image.asset(
+                                widget.image,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                widget.image,
+                                fit: BoxFit.cover,
+                              ),
                       ),
                     ),
                     Column(
@@ -114,11 +122,11 @@ class _WorkCardState extends State<WorkCard> {
                         onPressed: () {
                           setState(
                             () {
-                              if (value == 1) {
-                                nivel = 0;
-                                count = count + 1;
+                              if (widget.value == 1) {
+                                widget.nivel = 0;
+                                widget.count++;
                               } else {
-                                nivel++;
+                                widget.nivel++;
                               }
                             },
                           );
@@ -148,12 +156,13 @@ class _WorkCardState extends State<WorkCard> {
                       child: LinearProgressIndicator(
                         color: Colors.white,
                         value: (widget.difficulty > 0)
-                            ? value = (nivel / widget.difficulty) / 10
-                            : value = 1,
+                            ? widget.value =
+                                (widget.nivel / widget.difficulty) / 10
+                            : widget.value = 1,
                       ),
                     ),
                     Text(
-                      'Nível $nivel',
+                      'Nível ${widget.nivel}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
